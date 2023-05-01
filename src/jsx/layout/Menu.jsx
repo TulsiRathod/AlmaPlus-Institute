@@ -20,7 +20,12 @@ function Menu() {
       image: '',
       name: ''
    })
+
    var dashboardClass = window.location.pathname.match(/^\/dashboard/) ? "active" : "";
+   var usersClass = window.location.pathname.match(/^\/users/) ? "active" : "";
+   var coursesClass = window.location.pathname.match(/^\/courses/) ? "active" : "";
+   var eventsClass = window.location.pathname.match(/^\/events/) ? "active" : "";
+   var postsClass = window.location.pathname.match(/^\/posts/) ? "active" : "";
 
    const getData = () => {
       var bodyFormData = new URLSearchParams();
@@ -33,19 +38,19 @@ function Menu() {
          data: bodyFormData,
          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       }).then((response) => {
-         
+
          if (response.data.success === true) {
             setAdmin({
                name: response.data.data.name,
                // image: response.data.data.image
             })
          }
-      }).catch((error)=>{
+      }).catch((error) => {
          console.log(error.response.data.message);
       });
    };
 
-   useEffect(() => getData(), [])
+   // useEffect(() => getData(), [])
 
    return (
       <>
@@ -71,13 +76,35 @@ function Menu() {
          </div>
          <div id="sidebar" className="sidebar">
             <div data-scrollbar="true" data-height="100%">
-
                <ul className="nav">
-
                   <li className={dashboardClass}>
                      <Link to="/dashboard" >
                         <i className="fa fa-th-large"></i>
                         <span>Dashboard</span>
+                     </Link>
+                  </li>
+                  <li className={usersClass}>
+                     <Link to="/users" >
+                        <i class="fa fa-users"></i>
+                        <span>Users</span>
+                     </Link>
+                  </li>
+                  <li className={coursesClass}>
+                     <Link to="/courses" >
+                        <i class="fa fa-book"></i>
+                        <span>Courses</span>
+                     </Link>
+                  </li>
+                  <li className={eventsClass}>
+                     <Link to="/events" >
+                        <i class="fa fa-calendar"></i>
+                        <span>Events</span>
+                     </Link>
+                  </li>
+                  <li className={postsClass}>
+                     <Link to="/posts" >
+                        <i class="fa fa-address-card"></i>
+                        <span>Post</span>
                      </Link>
                   </li>
                </ul>

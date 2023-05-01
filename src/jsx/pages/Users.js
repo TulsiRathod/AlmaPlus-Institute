@@ -3,63 +3,47 @@ import { Link } from 'react-router-dom'
 import Loader from '../layout/Loader'
 import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
+import { ALMA_PLUS_API_URL } from './baseURL';
 
 // import SweetAlert from 'react-bootstrap-sweetalert';
-// import axios from 'axios';
+import axios from 'axios';
 // import { ALMA_PLUS_API_URL } from './baseURL';
 
 const Users = () => {
 
     // let navigate = useNavigate();
-    const [users] = useState([]);
+    const [users, setUsers] = useState([]);
     const [displayUsers, setDisplayUsers] = useState([]);
     const rows = [10, 20, 30];
     const [usersPerPage, setUsersPerPage] = useState(rows[0]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [from,setFrom]=useState('');
-    const [to,setTo]=useState('');
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
 
     useEffect(() => {
         document.getElementById('page-loader').style.display = 'none';
         var element = document.getElementById("page-container");
         element.classList.add("show");
-        // getUsersData('none','none');
+        getUsersData();
+
     }, []);
 
-    // const getUsersData = (startDate, endDate) => {
-    //     var bodyFormData = new URLSearchParams();
-    //     bodyFormData.append('auth_code', "PlUsOnE$123");
-    //     const myurl = `${ALMA_PLUS_API_URL}api/admin/get-users`;
-    //     axios({
-    //         method: "post",
-    //         url: myurl,
-    //         data: bodyFormData,
-    //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    //     }).then((response) => {
-    //         console.log(response.data.data);
-    //         if (response.data.success === true) {
-    //             let res = response.data.data;
-    //             let arr = [];
-    //             console.log(from);
-    //             console.log(to);
-    //             if(startDate==='none'&&endDate==='none'){
-    //             res.map((elem) => {
-    //                 arr.push({ ...elem, full_name: elem.first_name + ' ' + elem.last_name, phone_number: elem.country_code + elem.mobile })
-    //             })
-    //             }else{
-    //                 res.map((elem) => {
-    //                     if(elem.createdAt>=from && elem.createdAt<=to){
-    //                     arr.push({ ...elem, full_name: elem.first_name + ' ' + elem.last_name, phone_number: elem.country_code + elem.mobile })
-    //                     }
-    //                 })
-    //             }
-    //             setUsers(arr);
-    //         }
-    //     });
-    // };
+    const getUsersData = () => {
+
+        axios({
+            method: "get",
+            url: `${ALMA_PLUS_API_URL}api/getUsers`,
+            // data: bodyFormData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }).then((response) => {
+            console.log(response.data.data);
+            setUsers(response.data.data);
+
+        });
+    };
 
     useEffect(() => {
-        // setDisplayUsers(users);
+        setDisplayUsers(users);
     }, [users]);
 
     const indexOfLastUser = currentPage * usersPerPage;
@@ -82,21 +66,21 @@ const Users = () => {
             setDisplayUsers(users.filter(
                 (elem) =>
                     elem.full_name.toLowerCase().includes(search.toLowerCase()) ||
-                    elem.email.toLowerCase().includes(search.toLowerCase()) 
+                    elem.email.toLowerCase().includes(search.toLowerCase())
             ));
         } else {
             setDisplayUsers(users)
         }
     }
 
-    const handleApply = ()=>{
-        if(from && to){
-        // getUsersData(from,to);
-        setCurrentPage(1);
+    const handleApply = () => {
+        if (from && to) {
+            // getUsersData(from,to);
+            setCurrentPage(1);
         }
     }
 
-    const handleReset= ()=>{
+    const handleReset = () => {
         // getUsersData('none','none');
         setCurrentPage(1);
         setFrom('');
@@ -113,17 +97,11 @@ const Users = () => {
                         <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
                         <li className="breadcrumb-item active">Users</li>
                     </ol>
+
                     <h1 className="page-header">Users
-                        {/* <Link to="/add-user" className="btn btn-success" ><i className="fa fa-plus"></i></Link> */}
+                        <Link to="/add-user" className="btn btn-success mx-3" ><i className="fa fa-plus"></i></Link>
                     </h1>
-                    <div className='row date-filter d-flex align-items-center justify-content-sm-end m-r-10 m-b-10'>
-                        <label>From:</label>
-                        <input type="date" value={from} onChange={(e)=>{setFrom(e.target.value)}} className='form-control col-md-3 ml-2 mr-4'/>
-                        <label>To:</label>
-                        <input type="date" value={to} onChange={(e)=>{setTo(e.target.value)}} className='form-control col-md-3 ml-2' />
-                        <button className='btn btn-success ml-2' onClick={handleApply}>Apply</button>
-                        <button className='btn btn-danger ml-2' onClick={handleReset}>Reset / Clear</button>
-                    </div>
+
                     <div className="card">
                         <div className="card-body">
                             <div class="form-outline mb-4">
@@ -150,13 +128,12 @@ const Users = () => {
                                                 {currentUsers.length > 0 ? currentUsers.map((elem, index) =>
                                                     <tr key={index}>
                                                         <td align='left'>{index + 1}</td>
-                                                        <td>{elem.full_name}</td>
-                                                        <td><img src={elem.profile_pic} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} /></td>
+                                                        <td>{elem.fname}</td>
+                                                        <td><img src={`${ALMA_PLUS_API_URL}userImages/${elem.profilepic}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} /></td>
                                                         <td>{elem.email}</td>
-                                                        <td>{elem.phone_number ? elem.phone_number : ''}</td>
-                                                        <td>{elem.birth_date}</td>
-                                                        <td>{elem.type === 1 ? 'Regular' : elem.type === 2 ? 'Google' : 'Facebook'}</td>
-                                                        <td>{elem.is_switch_to_contractor?'Both':'Only User'}</td>
+                                                        <td>{elem.phone ? elem.phone : ''}</td>
+                                                        <td>{elem.dob}</td>
+                                                        <td>{elem.role}</td>
                                                         {/* <td><i className='fa fa-edit' style={{ color: "green", cursor: "pointer" }} onClick={() => history.push({ pathname: '/edit-collection', state: elem })} ></i><i className='fa fa-trash' onClick={() => handleDeleteCollection(elem.id)} style={{ marginLeft: "12px", color: "red", cursor: "pointer" }}></i></td> */}
                                                     </tr>
                                                 ) : <tr><td >No Record Found..</td></tr>}
