@@ -16,31 +16,22 @@ const EditUser = () => {
     // const [statess, setStatess] = useState(0);
     // const [citys, setCitys] = useState(0);
     const [data, setData] = useState({
-        name: "",
+        fname: "",
         email: ""
         // country: "",
         // state: "",
         // city: ""
     });
     const location = useLocation();
-    const state = location.state;
-    console.log("id is:", state);
+    const state = location.state.data;
+    console.log("data:", state);
 
     const getuserData = () => {
-        // firebase.firestore().collection('users').doc(location.state).get().then((doc) => {
-
-        //     setData({
-        //         name: doc.data().name,
-        //         email: doc.data().Email
-        //         // country: doc.data().country,
-        //         // state: doc.data().state,
-        //         // city: doc.data().city
-        //     })
-        // })
+        setData({
+            fname: state.fname,
+            email: state.email
+        })
     }
-
-
-
     useEffect(() => {
         document.getElementById('page-loader').style.display = 'none';
 
@@ -49,7 +40,6 @@ const EditUser = () => {
 
         getuserData();
     }, []);
-
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -142,7 +132,7 @@ const EditUser = () => {
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
                                                     <label htmlFor="exampleInputName">Name:</label>
-                                                    <input type="text" className="form-control" id="exampleInputName" placeholder="Enter Name" name="name" onChange={InputEvent} value={data.name} />
+                                                    <input type="text" className="form-control" id="exampleInputName" placeholder="Enter Name" name="fname" onChange={InputEvent} value={data.fname} />
                                                     <div className="text-danger">{errors.name_err}</div>
                                                 </div>
                                             </div>

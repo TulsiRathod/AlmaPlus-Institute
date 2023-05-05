@@ -1,2 +1,2 @@
-export const ALMA_PLUS_API_URL = "https://alma-plus-server.vercel.app/";
-// export const ALMA_PLUS_API_URL = "http://localhost:3000/";
+// export const ALMA_PLUS_API_URL = "https://alma-plus-server.vercel.app/";
+export const ALMA_PLUS_API_URL = "http://localhost:5000/";

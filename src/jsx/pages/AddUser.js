@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
+import { ALMA_PLUS_API_URL } from './baseURL';
+import axios from 'axios';
 
 import Loader from '../layout/Loader'
 import Menu from '../layout/Menu';
@@ -17,67 +19,56 @@ const AddUser = () => {
     }, []);
     const [errors, setErrors] = useState({});
     const [disable, setDisable] = useState(false);
-    // const [states, setStates] = useState([]);
-    // const [cities, setCities] = useState([]);
+
     const [data, setData] = useState({
         name: "",
         email: "",
         number: ""
-        // country: "",
-        // state: "",
-        // city: ""
+
     });
+
+    const handleChange = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
+    };
 
     const handleReset = () => {
         setData({
             name: "",
             email: "",
             number: ""
-            // country: "",
-            // state: "",
-            // city: "",
         });
-        // setStates([]);
-        // setCities([]);
     }
 
-
     const submitHandler = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (validate()) {
             setDisable(true)
-            const { name, email, number, country, state, city } = data;
-            // const person = firebase.firestore().collection('users');
-            // person.add({
-            //     name,
-            //     Email: email,
-            //     PhoneNumber: number
-            //     // country,
-            //     // state,
-            //     // city
-            // }).then((docRef) => {
-            //     setData({
-            //         name: "",
-            //         email: "",
-            //         number: ""
-            //         // country: "",
-            //         // state: "",
-            //         // city: "",
-            //     });
-            //     toast.success("User Added Successfully...!");
-            //     setTimeout(() => {
-            //         navigate('/users')
-            //     }, 2000)
-            // }).catch((error) => {
-            //     setDisable(false)
-            //     console.log("Error getting documents: ", error);
-            // });
+            axios({
+                method: "post",
+                url: `${ALMA_PLUS_API_URL}api/inviteUser`,
+                data: {
+                    fname: data.name,
+                    phone: data.number,
+                    email: data.email
+                },
+            }).then((response) => {
+                // console.log(response.data.data);
+                handleReset();
+                setDisable(false);
+                toast.success("User Invited");
+                setTimeout(() => {
+                    navigate('/users');
+                }, 1500);
+            }).catch((error) => {
+                console.log(error);
+                setDisable(false);
+            });
+
         }
     };
 
     const validate = () => {
         let input = data;
-
         let errors = {};
         let isValid = true;
 
@@ -93,19 +84,6 @@ const AddUser = () => {
             isValid = false;
             errors["number_err"] = "Please Enter Phone Number";
         }
-        // if (!input["country"]) {
-        //     isValid = false;
-        //     errors["country_err"] = "Please Select Any Country";
-        // }
-        // if (!input["state"]) {
-        //     isValid = false;
-        //     errors["state_err"] = "Please Select Any State";
-        // }
-        // if (!input["city"]) {
-        //     isValid = false;
-        //     errors["city_err"] = "Please Select Any City";
-        // }
-
         setErrors(errors);
         return isValid;
     }
@@ -134,13 +112,12 @@ const AddUser = () => {
 
 
                                 <div className="panel-body">
-                                    <form onSubmit={(e) => submitHandler(e)} >
+                                    <form>
                                         <fieldset>
-
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
                                                     <label htmlFor="exampleInputName">Name:</label>
-                                                    <input type="text" className="form-control" id="exampleInputName" placeholder="Enter Name" name="name" onChange={InputEvent} />
+                                                    <input type="text" className="form-control" id="exampleInputName" placeholder="Enter Name" name="name" value={data.name} onChange={handleChange} />
                                                     <div className="text-danger">{errors.name_err}</div>
                                                 </div>
                                             </div>
@@ -148,7 +125,7 @@ const AddUser = () => {
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
                                                     <label htmlFor="exampleInputAddress">Email:</label>
-                                                    <input className="form-control" id="exampleInputEmail" placeholder="Enter Email Address" name="email" onChange={InputEvent} />
+                                                    <input className="form-control" id="exampleInputEmail" placeholder="Enter Email Address" name="email" value={data.email} onChange={handleChange} />
                                                     <div className="text-danger">{errors.email_err}</div>
                                                 </div>
                                             </div>
@@ -156,11 +133,11 @@ const AddUser = () => {
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
                                                     <label htmlFor="exampleInputAddress">Phone Number:</label>
-                                                    <input className="form-control" id="exampleInputNumber" placeholder="Enter Phone Number" name="number" onChange={InputEvent} />
+                                                    <input className="form-control" id="exampleInputNumber" placeholder="Enter Phone Number" name="number" value={data.number} onChange={handleChange} />
                                                     <div className="text-danger">{errors.number_err}</div>
                                                 </div>
                                             </div>
-                                            <button type="submit" className="btn btn-sm btn-success m-r-5" disabled={disable} >{disable ? 'Processing...' : 'Submit'}</button>
+                                            <button type="button" className="btn btn-sm btn-success m-r-5" onClick={submitHandler}>{disable ? 'Processing...' : 'Submit'}</button>
                                             <button type="reset" className="btn btn-sm btn-default" onClick={handleReset}>Reset</button>
                                         </fieldset>
                                     </form>

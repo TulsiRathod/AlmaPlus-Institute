@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Loader from '../layout/Loader'
 import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
@@ -10,7 +10,8 @@ import axios from 'axios';
 // import { ALMA_PLUS_API_URL } from './baseURL';
 
 const Users = () => {
-    let navigate = useNavigate();
+
+    // let navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [displayUsers, setDisplayUsers] = useState([]);
     const rows = [10, 20, 30];
@@ -31,7 +32,7 @@ const Users = () => {
 
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getUsers`,
+            url: `${ALMA_PLUS_API_URL}api/getCourses`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -119,7 +120,8 @@ const Users = () => {
                                                     <th>Phone Number</th>
                                                     <th>Birth Date</th>
                                                     <th>User Type</th>
-                                                    <th>Action</th>
+                                                    <th>Role</th>
+                                                    {/* <th>Action</th> */}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -127,12 +129,12 @@ const Users = () => {
                                                     <tr key={index}>
                                                         <td align='left'>{index + 1}</td>
                                                         <td>{elem.fname}</td>
-                                                        <td>{elem.profilepic === '' || elem.profilepic === undefined ? <img src='assets/img/profile1.png' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}></img> : <img src={`${ALMA_PLUS_API_URL}${elem.profilepic}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} />}</td>
+                                                        <td><img src={`${ALMA_PLUS_API_URL}userImages/${elem.profilepic}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} /></td>
                                                         <td>{elem.email}</td>
                                                         <td>{elem.phone ? elem.phone : ''}</td>
                                                         <td>{elem.dob}</td>
                                                         <td>{elem.role}</td>
-                                                        <td><i className='fa fa-edit' style={{ color: "green", cursor: "pointer" }} onClick={() => { navigate('/edit-user', { state: { data: elem } }) }}></i><i className='fa fa-trash' style={{ color: "red", cursor: "pointer", marginLeft: "5px" }} ></i></td>
+                                                        {/* <td><i className='fa fa-edit' style={{ color: "green", cursor: "pointer" }} onClick={() => history.push({ pathname: '/edit-collection', state: elem })} ></i><i className='fa fa-trash' onClick={() => handleDeleteCollection(elem.id)} style={{ marginLeft: "12px", color: "red", cursor: "pointer" }}></i></td> */}
                                                     </tr>
                                                 ) : <tr><td >No Record Found..</td></tr>}
                                             </tbody>
