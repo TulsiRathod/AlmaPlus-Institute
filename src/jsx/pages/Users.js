@@ -4,10 +4,8 @@ import Loader from '../layout/Loader'
 import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
 import { ALMA_PLUS_API_URL } from './baseURL';
-
-// import SweetAlert from 'react-bootstrap-sweetalert';
+import SweetAlert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
-// import { ALMA_PLUS_API_URL } from './baseURL';
 
 const Users = () => {
     let navigate = useNavigate();
@@ -41,6 +39,31 @@ const Users = () => {
         });
     };
 
+    // const handleDeleteCategory = (id) => {
+    //     setDeleteId(id);
+    //     setAlert(true);
+    // }
+
+    // const DeleteCategory = () => {
+    //     var bodyFormData = new URLSearchParams();
+    //     bodyFormData.append('auth_code', "PlUsOnE$123");
+    //     bodyFormData.append('cat_id', deleteId);
+    //     const myurl = `${PLUS_ONE_API_URL}api/admin/delete-category`;
+    //     axios({
+    //         method: "post",
+    //         url: myurl,
+    //         data: bodyFormData,
+    //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    //     }).then((response) => {
+    //         if (response.data.success === true) {
+    //             getCategoryList();
+    //             setDeleteId('');
+    //             setAlert(false);
+    //             setAlert2(true);
+    //         }
+    //     })
+    // }
+
     useEffect(() => {
         setDisplayUsers(users);
     }, [users]);
@@ -64,8 +87,8 @@ const Users = () => {
             let search = e.target.value;
             setDisplayUsers(users.filter(
                 (elem) =>
-                    elem.full_name.toLowerCase().includes(search.toLowerCase()) ||
-                    elem.email.toLowerCase().includes(search.toLowerCase())
+                    elem.email.toLowerCase().includes(search.toLowerCase()) ||
+                    elem.fname.toLowerCase().includes(search.toLowerCase())
             ));
         } else {
             setDisplayUsers(users)
@@ -78,7 +101,29 @@ const Users = () => {
             setCurrentPage(1);
         }
     }
+    const [deleteId, setDeleteId] = useState('');
+    const [alert, setAlert] = useState(false);
+    const [alert2, setAlert2] = useState(false);
 
+    const handleDeleteUser = (id) => {
+        setDeleteId(id);
+        setAlert(true);
+    }
+
+    const DeleteUser = () => {
+        // console.log("delete button");
+        axios({
+            method: "delete",
+            url: `${ALMA_PLUS_API_URL}api/deleteUser/${deleteId}`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                getUsersData();
+                setDeleteId('');
+                setAlert(false);
+                setAlert2(true);
+            }
+        })
+    }
     const handleReset = () => {
         // getUsersData('none','none');
         setCurrentPage(1);
@@ -132,7 +177,7 @@ const Users = () => {
                                                         <td>{elem.phone ? elem.phone : ''}</td>
                                                         <td>{elem.dob}</td>
                                                         <td>{elem.role}</td>
-                                                        <td><i className='fa fa-edit' style={{ color: "green", cursor: "pointer" }} onClick={() => { navigate('/edit-user', { state: { data: elem } }) }}></i><i className='fa fa-trash' style={{ color: "red", cursor: "pointer", marginLeft: "5px" }} ></i></td>
+                                                        <td><i className='fa fa-trash' style={{ color: "red", cursor: "pointer", marginLeft: "5px" }} onClick={() => { handleDeleteUser(elem._id) }}></i></td>
                                                     </tr>
                                                 ) : <tr><td >No Record Found..</td></tr>}
                                             </tbody>
@@ -160,7 +205,7 @@ const Users = () => {
                         </div>
                     </div>
                 </div>
-                {/* {alert === true ? <SweetAlert
+                {alert === true ? <SweetAlert
                     warning
                     showCancel
                     confirmBtnText="Yes, delete it!"
@@ -175,9 +220,9 @@ const Users = () => {
                 {alert2 === true ? <SweetAlert
                     success
                     title="User Deleted Successfully!"
-                    onConfirm={() => { setAlert2(false); getUserData(); }}
+                    onConfirm={() => { setAlert2(false); getUsersData(); }}
                 />
-                    : ''} */}
+                    : ''}
                 <Footer />
             </div>
         </Fragment>

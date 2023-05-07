@@ -9,37 +9,36 @@ import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
 
 const Profile = () => {
-
-    const [changepass, setChangePass] = useState({
-        old_password: '',
-        new_password: '',
-        confirm_password: ''
-    });
+    const ADMIN_ID = "64571e8764d8c6b82e7bcaf3";
+    // const [changepass, setChangePass] = useState({
+    //     old_password: '',
+    //     new_password: '',
+    //     confirm_password: ''
+    // });
     const [profileInfo, setProfileInfo] = useState({
+        _id: '',
         name: '',
         email: '',
-        image: ''
+        phone: '',
+        profilepic: ''
     });
     const [errors, setErrors] = useState({});
     const [disable, setDisable] = useState(false);
     const [disable2, setDisable2] = useState(false);
 
     const getData = () => {
-        var bodyFormData = new URLSearchParams();
-        bodyFormData.append('auth_code', "AlmaPlus");
-        bodyFormData.append('id', localStorage.getItem("AlmaPlus_admin_Id"));
-        const myurl = `${ALMA_PLUS_API_URL}api/admins/get-profile`;
+        const myurl = `${ALMA_PLUS_API_URL}api/getAdminById/${ADMIN_ID}`;
         axios({
-            method: "post",
+            method: "get",
             url: myurl,
-            data: bodyFormData,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
+            console.log(response.data.data[0].email);
             if (response.data.success === true) {
                 setProfileInfo({
-                    name: response.data.data.name,
-                    email: response.data.data.email,
-                    image: response.data.data.image
+                    name: response.data.data[0].name,
+                    email: response.data.data[0].email,
+                    phone: response.data.data[0].phone,
+                    profilepic: response.data.data[0].profilepic
                 })
             }
         });
@@ -48,69 +47,69 @@ const Profile = () => {
     useEffect(() => getData(), [])
 
     const handleImg = (e) => {
-        var bodyFormData = new FormData();
-        bodyFormData.append('image', e.target.files[0]);
-        const myurl = `${ALMA_PLUS_API_URL}api/admins/upload-img`;
+        var body = new FormData();
+        body.append('profilepic', e.target.files[0]);
+        const myurl = `${ALMA_PLUS_API_URL}api/uploadAdminImage`;
         axios({
             method: "post",
             url: myurl,
-            data: bodyFormData,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: body,
+            headers: { 'Content-Type': "multipart/form-data" },
         }).then((response) => {
             if (response.data.success === true) {
                 setProfileInfo({
                     ...profileInfo,
-                    image: response.data.data.url
+                    profilepic: response.data.data.url
                 })
             }
         });
     };
 
-    const handleChange = (e) => {
-        const newPass = { ...changepass };
-        newPass[e.target.name] = e.target.value;
-        setChangePass(newPass);
-    }
+    // const handleChange = (e) => {
+    //     const newPass = { ...changepass };
+    //     newPass[e.target.name] = e.target.value;
+    //     setChangePass(newPass);
+    // }
 
     const handleProfileReset = () => {
         getData();
     }
 
-    const handlePassReset = () => {
-        setChangePass({
-            old_password: '',
-            new_password: '',
-            confirm_password: ''
-        })
-    }
+    // const handlePassReset = () => {
+    //     setChangePass({
+    //         old_password: '',
+    //         new_password: '',
+    //         confirm_password: ''
+    //     })
+    // }
 
     const submitHandler = (e) => {
         e.preventDefault();
+        // console.log(profileInfo.phone);
         if (validate()) {
             setDisable(true);
-            var bodyFormData = new URLSearchParams();
-            bodyFormData.append('id', localStorage.getItem('AlmaPlus_Admin_Id'));
-            bodyFormData.append('email', profileInfo.email);
-            bodyFormData.append('name', profileInfo.name);
-            bodyFormData.append('image', profileInfo.image);
-            bodyFormData.append('auth_code', "AlmaPlus$123");
-            const myurl = `${ALMA_PLUS_API_URL}api/admin/update-profile`;
+            var body = new FormData();
+            body.append('id', `${ADMIN_ID}`);
+            body.append('email', profileInfo.email);
+            body.append('name', profileInfo.name);
+            body.append('phone', profileInfo.phone);
+            body.append('profilepic', profileInfo.profilepic);
             axios({
                 method: "post",
-                url: myurl,
-                data: bodyFormData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                url: `${ALMA_PLUS_API_URL}api/adminUpdate`,
+                data: body,
             }).then((response) => {
-                if (response.data.success === true) {
-                    toast.success('Profile Updated Successfully')
-                    localStorage.setItem('AlmaPlus_Admin_Email', profileInfo.email);
-                    window.location.reload();
-                    setDisable(false);
-                    setErrors({});
-                } else {
-                    setDisable(false);
-                    toast.error('Something went wrong')
-                }
+                console.log(response);
+                // if (response.data.success === true) {
+                //     toast.success('Profile Updated Successfully')
+                //     // localStorage.setItem('AlmaPlus_Admin_Email', profileInfo.email);
+                //     window.location.reload();
+                //     setDisable(false);
+                //     setErrors({});
+                // } else {
+                //     setDisable(false);
+                //     toast.error('Something went wrong')
+                // }
             }).catch((error) => {
                 console.log("Errors", error);
                 setDisable(false);
@@ -118,44 +117,44 @@ const Profile = () => {
         }
     }
 
-    const submitHandlerTwo = (e) => {
-        e.preventDefault();
-        if (validateTwo()) {
-            setDisable2(true);
-            var bodyFormData = new URLSearchParams();
-            bodyFormData.append('auth_code', "AlmaPlus");
-            bodyFormData.append('id', localStorage.getItem('AlmaPlus_admin_Id'));
-            bodyFormData.append('old_password', changepass.old_password);
-            bodyFormData.append('new_password', changepass.new_password);
-            const myurl = `${ALMA_PLUS_API_URL}api/admins/change-password`;
-            axios({
-                method: "post",
-                url: myurl,
-                data: bodyFormData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            }).then((response) => {
-                console.log(response);
-                if (response.data.success === true) {
-                    toast.success('Password Updated Successfully')
-                    localStorage.setItem('AlmaPlus_Admin_Password', changepass.new_password);
-                    setDisable2(false);
-                    setChangePass({
-                        old_password: '',
-                        new_password: '',
-                        confirm_password: ''
-                    });
-                    setErrors({});
-                } else {
-                    setDisable2(false);
-                    toast.error('Something went wrong')
-                    setErrors({ ...errors, confirm_password: response.data.message })
-                }
-            }).catch((error) => {
-                console.log("Errors", error);
-                setDisable2(false);
-            })
-        }
-    }
+    // const submitHandlerTwo = (e) => {
+    //     e.preventDefault();
+    //     if (validateTwo()) {
+    //         setDisable2(true);
+    //         var bodyFormData = new URLSearchParams();
+    //         bodyFormData.append('auth_code', "AlmaPlus");
+    //         bodyFormData.append('id', localStorage.getItem('AlmaPlus_admin_Id'));
+    //         bodyFormData.append('old_password', changepass.old_password);
+    //         bodyFormData.append('new_password', changepass.new_password);
+    //         const myurl = `${ALMA_PLUS_API_URL}api/admins/change-password`;
+    //         axios({
+    //             method: "post",
+    //             url: myurl,
+    //             data: bodyFormData,
+    //             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    //         }).then((response) => {
+    //             console.log(response);
+    //             if (response.data.success === true) {
+    //                 toast.success('Password Updated Successfully')
+    //                 localStorage.setItem('AlmaPlus_Admin_Password', changepass.new_password);
+    //                 setDisable2(false);
+    //                 // setChangePass({
+    //                 //     old_password: '',
+    //                 //     new_password: '',
+    //                 //     confirm_password: ''
+    //                 // });
+    //                 setErrors({});
+    //             } else {
+    //                 setDisable2(false);
+    //                 toast.error('Something went wrong')
+    //                 setErrors({ ...errors, confirm_password: response.data.message })
+    //             }
+    //         }).catch((error) => {
+    //             console.log("Errors", error);
+    //             setDisable2(false);
+    //         })
+    //     }
+    // }
 
     const validate = () => {
         let input = profileInfo;
@@ -173,33 +172,33 @@ const Profile = () => {
         return isValid;
     };
 
-    const validateTwo = () => {
-        let input = changepass;
-        let errors = {};
-        let isValid = true;
-        if (!input["old_password"]) {
-            isValid = false;
-            errors["old_password_err"] = "Please Enter Old Password";
-        }
-        if (!input["new_password"]) {
-            isValid = false;
-            errors["new_password_err"] = "Please Enter New Password";
-        }
-        if (!input["confirm_password"]) {
-            isValid = false;
-            errors["confirm_password_err"] = "Please Enter Confirm Password";
-        }
-        if (input["new_password"] !== input["confirm_password"]) {
-            isValid = false;
-            errors["confirm_password_err"] = "Password Doesn't Match";
-        }
-        if (input["new_password"] === input["old_password"]) {
-            isValid = false;
-            errors["new_password_err"] = "New Password should be different from old one";
-        }
-        setErrors(errors);
-        return isValid;
-    };
+    // const validateTwo = () => {
+    //     let input = changepass;
+    //     let errors = {};
+    //     let isValid = true;
+    //     if (!input["old_password"]) {
+    //         isValid = false;
+    //         errors["old_password_err"] = "Please Enter Old Password";
+    //     }
+    //     if (!input["new_password"]) {
+    //         isValid = false;
+    //         errors["new_password_err"] = "Please Enter New Password";
+    //     }
+    //     if (!input["confirm_password"]) {
+    //         isValid = false;
+    //         errors["confirm_password_err"] = "Please Enter Confirm Password";
+    //     }
+    //     if (input["new_password"] !== input["confirm_password"]) {
+    //         isValid = false;
+    //         errors["confirm_password_err"] = "Password Doesn't Match";
+    //     }
+    //     if (input["new_password"] === input["old_password"]) {
+    //         isValid = false;
+    //         errors["new_password_err"] = "New Password should be different from old one";
+    //     }
+    //     setErrors(errors);
+    //     return isValid;
+    // };
 
 
     useEffect(() => {
@@ -247,11 +246,11 @@ const Profile = () => {
                                                 <div className="col-md-12 form-group">
                                                     <label for="exampleInputImage">Image:</label>
                                                     <br />
-                                                    {profileInfo.image !== '' ?
-                                                        <img src={profileInfo.image} className="form-img__img-preview" style={{ width: "84px", height: "84px" }} alt='profile_img' />
+                                                    <input type="file" className="form-control" id="exampleInputImage" onChange={handleImg} />
+                                                    {profileInfo.profilepic !== '' ?
+                                                        <img src={profileInfo.profilepic} className="form-img__img-preview" style={{ width: "84px", height: "84px" }} alt='profile_img' />
                                                         : ''
                                                     }
-                                                    <input type="file" className="form-control" id="exampleInputImage" onChange={handleImg} />
                                                 </div>
                                             </div>
                                             <button type="submit" className="btn btn-sm btn-success m-r-5" disabled={disable}>{disable ? 'Processing...' : 'Submit'}</button>
@@ -261,7 +260,7 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-6 ui-sortable">
+                        {/* <div className="col-xl-6 ui-sortable">
                             <div className="panel panel-inverse" data-sortable-id="form-stuff-10">
                                 <div className="panel-heading ui-sortable-handle">
                                     <h4 className="panel-title">Change Password</h4>
@@ -296,7 +295,7 @@ const Profile = () => {
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <Footer />

@@ -91,7 +91,7 @@ function Menu() {
                   </li>
                   <li className={coursesClass}>
                      <Link to="/courses" >
-                        <i class="fa fa-book"></i>
+                        <i class="fa fa-graduation-cap"></i>
                         <span>Courses</span>
                      </Link>
                   </li>

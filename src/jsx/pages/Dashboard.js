@@ -4,13 +4,67 @@ import Loader from '../layout/Loader'
 import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
 import axios from 'axios';
+import { ALMA_PLUS_API_URL } from './baseURL';
 
 function Dashboard() {
     useEffect(() => {
         document.getElementById('page-loader').style.display = 'none';
         var element = document.getElementById("page-container");
         element.classList.add("show");
+        getTotalUser();
+        getTotalCourses();
+        getTotalEvents();
+        getTotalPosts();
     }, []);
+
+    const [users, setUsers] = useState(0);
+    const [courses, setCourses] = useState(0);
+    const [events, setEvents] = useState(0);
+    const [posts, setPosts] = useState(0);
+
+    const getTotalUser = () => {
+        axios({
+            method: "get",
+            url: `${ALMA_PLUS_API_URL}api/getUsers`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                setUsers(response.data.data.length);
+            }
+        });
+    };
+
+    const getTotalCourses = () => {
+        axios({
+            method: "get",
+            url: `${ALMA_PLUS_API_URL}api/getCourse`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                setCourses(response.data.data.length);
+            }
+        });
+    };
+
+    const getTotalEvents = () => {
+        axios({
+            method: "get",
+            url: `${ALMA_PLUS_API_URL}api/getEvents`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                setEvents(response.data.data.length);
+            }
+        });
+    };
+    const getTotalPosts = () => {
+        axios({
+            method: "get",
+            url: `${ALMA_PLUS_API_URL}api/getPost`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                setPosts(response.data.data.length);
+            }
+        });
+    };
+
     return (
         <>
             <Loader />
@@ -28,7 +82,7 @@ function Dashboard() {
                                 <div className="stats-icon"><i className="fa fa-users"></i></div>
                                 <div className="stats-info">
                                     <h4>Total Users</h4>
-                                    <p>122</p>
+                                    <p>{users}</p>
                                 </div>
                                 <div className="stats-link">
                                     <Link to="/users">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
@@ -38,10 +92,11 @@ function Dashboard() {
 
                         <div className="col-xl-3 col-md-6">
                             <div className="widget widget-stats bg-purple">
-                                <div className="stats-icon"> <i class="fa fa-book"></i></div>
+                                <div className="stats-icon"><i class="fa fa-graduation-cap"></i>
+                                </div>
                                 <div className="stats-info">
                                     <h4>Total Courses</h4>
-                                    <p>10</p>
+                                    <p>{courses}</p>
                                 </div>
                                 <div className="stats-link">
                                     <Link to="/courses">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
@@ -54,10 +109,10 @@ function Dashboard() {
                                 <div className="stats-icon"> <i class="fa fa-calendar"></i></div>
                                 <div className="stats-info">
                                     <h4>Total Events</h4>
-                                    <p>18</p>
+                                    <p>{events}</p>
                                 </div>
                                 <div className="stats-link">
-                                    <Link to="/courses">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
+                                    <Link to="/events">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
                                 </div>
                             </div>
                         </div>
@@ -67,10 +122,10 @@ function Dashboard() {
                                 <div className="stats-icon"> <i class="fa fa-address-card"></i></div>
                                 <div className="stats-info">
                                     <h4>Total Posts</h4>
-                                    <p>20</p>
+                                    <p>{posts}</p>
                                 </div>
                                 <div className="stats-link">
-                                    <Link to="/courses">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
+                                    <Link to="/posts">View Detail <i className="fa fa-arrow-alt-circle-right"></i></Link>
                                 </div>
                             </div>
                         </div>
