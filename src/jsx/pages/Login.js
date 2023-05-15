@@ -36,10 +36,9 @@ const Login = () => {
         if (validate()) {
             setDisable(true);
             var bodyFormData = new URLSearchParams();
-            bodyFormData.append('auth_code', "AlmaPlus");
             bodyFormData.append('email', loginInfo.email);
             bodyFormData.append('password', loginInfo.password);
-            const myurl = `${ALMA_PLUS_API_URL}api/admins/signin`;
+            const myurl = `${ALMA_PLUS_API_URL}api/instituteLogin`;
             axios({
                 method: "post",
                 url: myurl,
@@ -48,9 +47,7 @@ const Login = () => {
             }).then((response) => {
                 if (response.data.success === true) {
                     toast.success('Login Successfully')
-                    localStorage.setItem('AlmaPlus_admin_Id', response.data.data._id);
-                    localStorage.setItem('AlmaPlus_admin_Email', loginInfo.email);
-                    localStorage.setItem('AlmaPlus_admin_Password', loginInfo.password);
+                    localStorage.setItem('AlmaPlus_institute_Id', response.data.data._id);
                     if (check === true) {
                         localStorage.setItem('AlmaPlus_admin_Remember_Me', 'Enabled')
                     } else {
@@ -86,6 +83,9 @@ const Login = () => {
     }
 
     useEffect(() => {
+        if (localStorage.getItem("AlmaPlus_institute_Id") !== null) {
+            navigate('/dashboard');
+        }
         document.getElementById('page-loader').style.display = 'none';
         var element = document.getElementById("page-container");
         element.classList.add("show");
@@ -113,7 +113,7 @@ const Login = () => {
                     <div className="login-header">
                         <div className="brand">
                             {/* <span className="logo"></span> */}
-                            <img src='Logo.jpg' style={{ marginRight: '10px', width: '40px', height: '40px',borderRadius:"8px" }} alt="logo" />
+                            <img src='Logo.jpg' style={{ marginRight: '10px', width: '40px', height: '40px', borderRadius: "8px" }} alt="logo" />
                             <b>AlmaPlus</b> Institute
                             <small>Login for AlmaPlus Institute panel</small>
                         </div>
