@@ -30,7 +30,7 @@ const Posts = () => {
 
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getPostById/${INSTITUTE_ID}`,
+            url: `${ALMA_PLUS_API_URL}/api/getPostById/${INSTITUTE_ID}`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -96,7 +96,7 @@ const Posts = () => {
         // console.log("delete button");
         axios({
             method: "delete",
-            url: `${ALMA_PLUS_API_URL}api/deletePost/${deleteId}`,
+            url: `${ALMA_PLUS_API_URL}/api/deletePost/${deleteId}`,
         }).then((response) => {
             if (response.data.success === true) {
                 getPostsData();

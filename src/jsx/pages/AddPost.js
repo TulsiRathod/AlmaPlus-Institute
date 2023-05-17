@@ -59,7 +59,7 @@ const AddPost = () => {
 
             axios({
                 method: "post",
-                url: `${ALMA_PLUS_API_URL}api/instituteAddPost`,
+                url: `${ALMA_PLUS_API_URL}/api/instituteAddPost`,
                 data: body,
                 headers: {
                     "content-type": "multipart/form-data"

@@ -82,7 +82,7 @@ const EditEvent = () => {
 
             axios({
                 method: "post",
-                url: `${ALMA_PLUS_API_URL}api/editEvent`,
+                url: `${ALMA_PLUS_API_URL}/api/editEvent`,
                 data: body,
                 headers: {
                     "content-type": "multipart/form-data"

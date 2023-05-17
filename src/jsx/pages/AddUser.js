@@ -45,7 +45,7 @@ const AddUser = () => {
             setDisable(true)
             axios({
                 method: "post",
-                url: `${ALMA_PLUS_API_URL}api/inviteUser`,
+                url: `${ALMA_PLUS_API_URL}/api/inviteUser`,
                 data: {
                     fname: data.name,
                     phone: data.number,

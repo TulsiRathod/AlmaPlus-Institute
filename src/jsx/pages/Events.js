@@ -29,7 +29,7 @@ const Events = () => {
 
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getEvents`,
+            url: `${ALMA_PLUS_API_URL}/api/getEvents`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -96,7 +96,7 @@ const Events = () => {
     const DeleteEvent = () => {
         axios({
             method: "delete",
-            url: `${ALMA_PLUS_API_URL}api/deleteEvent/${deleteId}`,
+            url: `${ALMA_PLUS_API_URL}/api/deleteEvent/${deleteId}`,
         }).then((response) => {
             if (response.data.success === true) {
                 getEventsData();

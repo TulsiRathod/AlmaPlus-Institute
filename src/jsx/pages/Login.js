@@ -38,7 +38,7 @@ const Login = () => {
             var bodyFormData = new URLSearchParams();
             bodyFormData.append('email', loginInfo.email);
             bodyFormData.append('password', loginInfo.password);
-            const myurl = `${ALMA_PLUS_API_URL}api/instituteLogin`;
+            const myurl = `${ALMA_PLUS_API_URL}/api/instituteLogin`;
             axios({
                 method: "post",
                 url: myurl,
@@ -129,7 +129,7 @@ const Login = () => {
                             </div>
                             <div className="form-group m-b-20">
                                 <input type="password" className="form-control form-control-lg my-3" placeholder="Password" name="password" onChange={InputEvent} value={loginInfo.password} />
-                                <a onClick={() => navigate('/forgot-password')} style={{ color: "white", marginLeft: "250px", textDecoration: "underline" }}>Forgot Password</a>
+                                <a onClick={() => navigate('/forgot-password')} style={{ color: "white", marginLeft: "243px", textDecoration: "underline" }}>Forgot Password</a>
                                 <div className="text-danger">{errors.password_err}</div>
                                 <div className='text-danger'>{err}</div>
                             </div>

@@ -25,7 +25,7 @@ function Dashboard() {
     const getTotalUser = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getUsers`,
+            url: `${ALMA_PLUS_API_URL}/api/getUsers`,
         }).then((response) => {
             if (response.data.success === true) {
                 setUsers(response.data.data.length);
@@ -36,7 +36,7 @@ function Dashboard() {
     const getTotalCourses = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getCourse`,
+            url: `${ALMA_PLUS_API_URL}/api/getCourse`,
         }).then((response) => {
             if (response.data.success === true) {
                 setCourses(response.data.data.length);
@@ -47,7 +47,7 @@ function Dashboard() {
     const getTotalEvents = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getEvents`,
+            url: `${ALMA_PLUS_API_URL}/api/getEvents`,
         }).then((response) => {
             if (response.data.success === true) {
                 setEvents(response.data.data.length);
@@ -57,7 +57,7 @@ function Dashboard() {
     const getTotalPosts = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getPost`,
+            url: `${ALMA_PLUS_API_URL}/api/getPost`,
         }).then((response) => {
             if (response.data.success === true) {
                 setPosts(response.data.data.length);

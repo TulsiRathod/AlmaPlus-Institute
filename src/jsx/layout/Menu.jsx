@@ -6,20 +6,17 @@ import { ALMA_PLUS_API_URL } from '../pages/baseURL';
 
 function Menu() {
    const navigate = useNavigate();
-   // if (localStorage.getItem("AlmaPlus_admin_Id") == null) {
-   //    toast.error("Please login first...!");
-   //    navigate(`/`);
-   // }
 
-   const Logout = () => {
-      localStorage.removeItem('AlmaPlus_Admin_Id');
+   if (localStorage.getItem("AlmaPlus_institute_Id") == null) {
+      toast.error("Please login first...!");
       navigate(`/`);
    }
 
-   const [admin, setAdmin] = useState({
-      image: '',
-      name: ''
-   })
+   const Logout = () => {
+      localStorage.removeItem('AlmaPlus_institute_Id');
+      navigate(`/`);
+   }
+
 
    var dashboardClass = window.location.pathname.match(/^\/dashboard/) ? "active" : "";
    var usersClass = window.location.pathname.match(/^\/users/) ? "active" : "";
@@ -27,30 +24,32 @@ function Menu() {
    var eventsClass = window.location.pathname.match(/^\/events/) ? "active" : "";
    var postsClass = window.location.pathname.match(/^\/posts/) ? "active" : "";
 
-   const getData = () => {
-      var bodyFormData = new URLSearchParams();
-      bodyFormData.append('auth_code', "AlmaPlus");
-      bodyFormData.append('id', localStorage.getItem("AlmaPlus_admin_Id"));
-      const myurl = `${ALMA_PLUS_API_URL}api/admins/get-profile`;
-      axios({
-         method: "post",
-         url: myurl,
-         data: bodyFormData,
-         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      }).then((response) => {
 
+   const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
+
+   const [profileInfo, setProfileInfo] = useState({
+      name: '',
+      image: ''
+   });
+
+   const getData = () => {
+      const myurl = `${ALMA_PLUS_API_URL}/api/getInstituteById/${institute_Id}`;
+      axios({
+         method: "get",
+         url: myurl,
+      }).then((response) => {
+         // console.log(response.data.data.name);
          if (response.data.success === true) {
-            setAdmin({
+            setProfileInfo({
                name: response.data.data.name,
-               // image: response.data.data.image
+               image: response.data.data.image
             })
          }
-      }).catch((error) => {
-         console.log(error.response.data.message);
       });
    };
 
-   // useEffect(() => getData(), [])
+   useEffect(() => getData(), [])
+
 
    return (
       <>
@@ -64,8 +63,8 @@ function Menu() {
             <ul className="navbar-nav navbar-right">
                <li className="dropdown navbar-user">
                   <a className="dropdown-toggle" data-toggle="dropdown">
-                     <img src="/assets/img/login-bg/login-bg-1-thumb.jpg" alt="" />
-                     <span className="d-none d-md-inline">User</span> <b className="caret"></b>
+                     <img src={`${ALMA_PLUS_API_URL}${profileInfo.image}`} alt="" />
+                     <span className="d-none d-md-inline">{profileInfo.name}</span> <b className="caret"></b>
                   </a>
                   <div className="dropdown-menu dropdown-menu-right">
                      <Link to="/profile" className="dropdown-item">Edit Profile</Link>

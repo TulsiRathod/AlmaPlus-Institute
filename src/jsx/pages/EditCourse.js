@@ -65,7 +65,7 @@ const EditCourse = () => {
             setDisable(true);
             axios({
                 method: "post",
-                url: `${ALMA_PLUS_API_URL}api/editCourse`,
+                url: `${ALMA_PLUS_API_URL}/api/editCourse`,
                 data: {
                     id: data.id,
                     name: data.name,

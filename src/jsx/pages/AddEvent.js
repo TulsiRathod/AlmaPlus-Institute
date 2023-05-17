@@ -60,7 +60,7 @@ const AddEvent = () => {
             });
             axios({
                 method: "post",
-                url: `${ALMA_PLUS_API_URL}api/addEvent`,
+                url: `${ALMA_PLUS_API_URL}/api/addEvent`,
                 data: body,
                 headers: {
                     "content-type": "multipart/form-data"

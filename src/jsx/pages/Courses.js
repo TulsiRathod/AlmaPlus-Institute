@@ -30,7 +30,7 @@ const Courses = () => {
     const getCoursesData = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getCourse`,
+            url: `${ALMA_PLUS_API_URL}/api/getCourse`,
             // data: bodyFormData,
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -97,7 +97,7 @@ const Courses = () => {
         // console.log("delete button");
         axios({
             method: "delete",
-            url: `${ALMA_PLUS_API_URL}api/deleteCourse/${deleteId}`,
+            url: `${ALMA_PLUS_API_URL}/api/deleteCourse/${deleteId}`,
         }).then((response) => {
             if (response.data.success === true) {
                 getCoursesData();

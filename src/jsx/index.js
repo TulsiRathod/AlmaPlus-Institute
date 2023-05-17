@@ -14,13 +14,19 @@ import Posts from './pages/Posts';
 import AddPost from './pages/AddPost';
 import EditCourse from './pages/EditCourse';
 import EditEvent from './pages/EditEvent';
+import Register from './pages/Register';
+import NewPassword from './pages/NewPassword';
 
 
 const Markup = () => {
     return (
         <Routes>
             <Route path='/' element={<Login />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+
             <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/new-password' element={<NewPassword />} />
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/users' element={<Users />} />

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 function ForgotPassword() {
     const navigate = useNavigate();
-    const [email,setEmail]=useState('');
+    const [email, setEmail] = useState('');
 
     const [err, setErr] = useState('');
     const [disable, setDisable] = useState(false);
@@ -16,12 +16,12 @@ function ForgotPassword() {
         setEmail(e.target.value);
     }
 
-    const validate = ()=>{
-        let isValid=true;
+    const validate = () => {
+        let isValid = true;
         if (!email) {
             isValid = false;
-            setErr( "Please Enter Email");
-        }else{
+            setErr("Please Enter Email");
+        } else {
             setErr("");
         }
         return isValid;
@@ -29,27 +29,26 @@ function ForgotPassword() {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if(validate()){
-            console.log('submit');
-            console.log(email);
+        if (validate()) {
+            // console.log('submit');
+            // console.log(email);
             setDisable(true);
-            var bodyFormData = new URLSearchParams();
-            bodyFormData.append('auth_code', "AlmaPlus$123");
-            bodyFormData.append('email',email);
-            const myurl = `${ALMA_PLUS_API_URL}api/admin/forget-password-with-email`;
+            const myurl = `${ALMA_PLUS_API_URL}/api/instituteForgetPassword`;
             axios({
                 method: "post",
                 url: myurl,
-                data: bodyFormData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: {
+                    email: email
+                },
             }).then((response) => {
-                if(response.data.success===true){
+                // console.log(response)
+                if (response.data.success === true) {
                     setDisable(false);
-                    toast.success(response.data.message);
-                    setTimeout(()=>{
+                    toast.success(response.data.msg);
+                    setTimeout(() => {
                         navigate('/');
-                    },[2000])
-                  }
+                    }, [2000])
+                }
             }).catch((error) => {
                 console.log("Errors", error);
                 setDisable(false);
@@ -62,7 +61,6 @@ function ForgotPassword() {
         document.getElementById('page-loader').style.display = 'none';
         var element = document.getElementById("page-container");
         element.classList.add("show");
-
     }, []);
 
     return (
@@ -92,7 +90,7 @@ function ForgotPassword() {
                     <div className="login-content">
                         <form onSubmit={(e) => submitHandler(e)} >
                             <div className="form-group m-b-20">
-                                <input type="text" className="form-control form-control-lg" placeholder="Email Address" name="email" onChange={InputEvent} value={email}/>
+                                <input type="text" className="form-control form-control-lg" placeholder="Email Address" name="email" onChange={InputEvent} value={email} />
                                 <div className="text-danger">{err}</div>
                             </div>
                             <div className="login-buttons">

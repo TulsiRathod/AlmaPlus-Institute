@@ -29,7 +29,7 @@ const Users = () => {
 
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}api/getUsers`,
+            url: `${ALMA_PLUS_API_URL}/api/getUsers`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -114,7 +114,7 @@ const Users = () => {
         // console.log("delete button");
         axios({
             method: "delete",
-            url: `${ALMA_PLUS_API_URL}api/deleteUser/${deleteId}`,
+            url: `${ALMA_PLUS_API_URL}/api/deleteUser/${deleteId}`,
         }).then((response) => {
             if (response.data.success === true) {
                 getUsersData();
