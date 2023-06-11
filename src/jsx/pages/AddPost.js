@@ -10,12 +10,12 @@ import Footer from '../layout/Footer';
 
 const AddPost = () => {
 
-    let institute_id = "6448c8001de77b1d3a935986";
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
+    const [iname, setiname] = useState('');
 
     const navigate = useNavigate();
     useEffect(() => {
         document.getElementById('page-loader').style.display = 'none';
-
         var element = document.getElementById("page-container");
         element.classList.add("show");
 
@@ -24,7 +24,6 @@ const AddPost = () => {
     const [disable, setDisable] = useState(false);
 
     const [data, setData] = useState({
-        fname: "",
         description: "",
     });
     const [fileList, setFileList] = useState(null);
@@ -40,18 +39,33 @@ const AddPost = () => {
 
     const handleReset = () => {
         setData({
-            fname: "",
             description: "",
         });
     }
+    const getData = () => {
+        const myurl = `${ALMA_PLUS_API_URL}/api/getInstituteById/${institute_Id}`;
+        axios({
+            method: "get",
+            url: myurl,
+        }).then((response) => {
+            // console.log(response.data.data.email);
+            if (response.data.success === true) {
+                setiname(response.data.data.name);
+            }
+        });
+    };
+
+    useEffect(() => {
+        getData();
+    }, [institute_Id]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         if (validate()) {
             setDisable(true)
             const body = new FormData();
-            body.append("userid", institute_id);
-            body.append("fname", data.fname);
+            body.append("userid", institute_Id);
+            body.append("fname", iname);
             body.append("description", data.description);
             files.forEach((file, i) => {
                 body.append(`photos`, file, file.name);
@@ -78,6 +92,10 @@ const AddPost = () => {
             });
 
         }
+        // console.log(data.description);
+        // console.log(iname);
+        // console.log(institute_Id);
+
     };
 
     const validate = () => {
@@ -124,13 +142,13 @@ const AddPost = () => {
                                 <div className="panel-body">
                                     <form onSubmit={submitHandler}>
                                         <fieldset>
-                                            <div className="row">
+                                            {/* <div className="row">
                                                 <div className="col-md-12 form-group">
                                                     <label htmlFor="exampleInputName">Name:</label>
                                                     <input type="text" className="form-control" id="exampleInputName" placeholder="Enter your name" name="fname" value={data.fname} onChange={handleChange} />
                                                     <div className="text-danger">{errors.name_err}</div>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             <div className="row">
                                                 <div className="col-md-12 form-group">

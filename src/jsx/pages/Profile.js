@@ -11,13 +11,11 @@ import Footer from '../layout/Footer';
 const Profile = () => {
     const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
     const [changepass, setChangePass] = useState({
-        institute_id: '',
         oldpassword: '',
         newpassword: '',
         confirmpassword: ''
     });
     const [profileInfo, setProfileInfo] = useState({
-        id: '',
         name: '',
         email: '',
         phone: '',
@@ -36,7 +34,6 @@ const Profile = () => {
             // console.log(response.data.data.email);
             if (response.data.success === true) {
                 setProfileInfo({
-                    id: response.data.data._id,
                     name: response.data.data.name,
                     email: response.data.data.email,
                     phone: response.data.data.phone,
@@ -83,10 +80,10 @@ const Profile = () => {
                 method: "post",
                 url: `${ALMA_PLUS_API_URL}/api/instituteUpdate`,
                 data: {
-                    id: profileInfo.id,
+                    id: institute_Id,
                     name: profileInfo.name,
-                    phone: profileInfo.stream,
-                    email: profileInfo.duration,
+                    phone: profileInfo.phone,
+                    email: profileInfo.email,
                     image: profileInfo.image
                 },
             }).then((response) => {

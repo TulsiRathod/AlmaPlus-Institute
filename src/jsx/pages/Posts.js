@@ -8,7 +8,7 @@ import axios from 'axios';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 const Posts = () => {
-    let INSTITUTE_ID = "6448c8001de77b1d3a935986";
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
 
     let navigate = useNavigate();
     const [posts, setPosts] = useState([]);
@@ -30,7 +30,7 @@ const Posts = () => {
 
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getPostById/${INSTITUTE_ID}`,
+            url: `${ALMA_PLUS_API_URL}/api/getPostById/${institute_Id}`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
@@ -125,7 +125,7 @@ const Posts = () => {
                     <div className="card">
                         <div className="card-body">
                             <div class="form-outline mb-4">
-                                <input type="search" class="form-control" id="datatable-search-input" placeholder='Search Event' onChange={handleSearch} />
+                                <input type="search" class="form-control" id="datatable-search-input" placeholder='Search post' onChange={handleSearch} />
                             </div>
                             <div className="row">
                                 <div className="col-12">

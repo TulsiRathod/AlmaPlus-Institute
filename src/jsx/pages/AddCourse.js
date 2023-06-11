@@ -16,6 +16,8 @@ const AddCourse = () => {
         element.classList.add("show");
 
     }, []);
+
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
     const [errors, setErrors] = useState({});
     const [disable, setDisable] = useState(false);
 
@@ -46,6 +48,7 @@ const AddCourse = () => {
                 method: "post",
                 url: `${ALMA_PLUS_API_URL}/api/addCourse`,
                 data: {
+                    instituteid: institute_Id,
                     name: data.name,
                     stream: data.stream,
                     duration: data.duration

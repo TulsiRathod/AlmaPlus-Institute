@@ -8,6 +8,9 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 
 const Users = () => {
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
+    const institute_Name = localStorage.getItem("AlmaPlus_institute_Name");
+
     let navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [displayUsers, setDisplayUsers] = useState([]);
@@ -25,11 +28,11 @@ const Users = () => {
 
     }, []);
 
-    const getUsersData = () => {
 
+    const getUsersData = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getUsers`,
+            url: `${ALMA_PLUS_API_URL}/api/getUsersOfInstitute/${institute_Name}`,
             // data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {

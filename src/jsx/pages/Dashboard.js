@@ -16,6 +16,8 @@ function Dashboard() {
         getTotalEvents();
         getTotalPosts();
     }, []);
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
+    const institute_Name = localStorage.getItem("AlmaPlus_institute_Name");
 
     const [users, setUsers] = useState(0);
     const [courses, setCourses] = useState(0);
@@ -25,7 +27,7 @@ function Dashboard() {
     const getTotalUser = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getUsers`,
+            url: `${ALMA_PLUS_API_URL}/api/getUsersOfInstitute/${institute_Name}`,
         }).then((response) => {
             if (response.data.success === true) {
                 setUsers(response.data.data.length);
@@ -36,7 +38,7 @@ function Dashboard() {
     const getTotalCourses = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getCourse`,
+            url: `${ALMA_PLUS_API_URL}/api/getCourseByInstitute/${institute_Id}`,
         }).then((response) => {
             if (response.data.success === true) {
                 setCourses(response.data.data.length);
@@ -47,7 +49,7 @@ function Dashboard() {
     const getTotalEvents = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getEvents`,
+            url: `${ALMA_PLUS_API_URL}/api/getEventsByInstitute/${institute_Id}`,
         }).then((response) => {
             if (response.data.success === true) {
                 setEvents(response.data.data.length);
@@ -57,7 +59,7 @@ function Dashboard() {
     const getTotalPosts = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getPost`,
+            url: `${ALMA_PLUS_API_URL}/api/getPostById/${institute_Id}`,
         }).then((response) => {
             if (response.data.success === true) {
                 setPosts(response.data.data.length);

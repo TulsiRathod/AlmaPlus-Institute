@@ -8,6 +8,7 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 
 const Courses = () => {
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
 
     // let navigate = useNavigate();
     let navigate = useNavigate();
@@ -30,7 +31,7 @@ const Courses = () => {
     const getCoursesData = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getCourse`,
+            url: `${ALMA_PLUS_API_URL}/api/getCourseByInstitute/${institute_Id}`,
             // data: bodyFormData,
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {

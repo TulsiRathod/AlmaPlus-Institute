@@ -48,6 +48,7 @@ const Login = () => {
                 if (response.data.success === true) {
                     toast.success('Login Successfully')
                     localStorage.setItem('AlmaPlus_institute_Id', response.data.data._id);
+                    localStorage.setItem('AlmaPlus_institute_Name', response.data.data.name);
                     if (check === true) {
                         localStorage.setItem('AlmaPlus_admin_Remember_Me', 'Enabled')
                     } else {
