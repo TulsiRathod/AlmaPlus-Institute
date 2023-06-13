@@ -28,7 +28,6 @@ const Events = () => {
     }, []);
 
     const getEventsData = () => {
-
         axios({
             method: "get",
             url: `${ALMA_PLUS_API_URL}/api/getEventsByInstitute/${institute_Id}`,

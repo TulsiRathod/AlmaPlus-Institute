@@ -9,23 +9,23 @@ import Menu from '../layout/Menu';
 import Footer from '../layout/Footer';
 
 const AddEvent = () => {
+    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
     const navigate = useNavigate();
     useEffect(() => {
         document.getElementById('page-loader').style.display = 'none';
-
         var element = document.getElementById("page-container");
         element.classList.add("show");
 
     }, []);
     const [errors, setErrors] = useState({});
     const [disable, setDisable] = useState(false);
-
     const [data, setData] = useState({
         title: "",
         description: "",
         date: "",
         venue: "",
     });
+
     const [fileList, setFileList] = useState(null);
     const files = fileList ? [...fileList] : [];
 
@@ -51,6 +51,7 @@ const AddEvent = () => {
         if (validate()) {
             setDisable(true)
             const body = new FormData();
+            body.append("organizerid", institute_Id)
             body.append("title", data.title);
             body.append("description", data.description);
             body.append("date", data.date);

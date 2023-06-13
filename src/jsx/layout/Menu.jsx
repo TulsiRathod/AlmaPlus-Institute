@@ -23,6 +23,7 @@ function Menu() {
    var coursesClass = window.location.pathname.match(/^\/courses/) ? "active" : "";
    var eventsClass = window.location.pathname.match(/^\/events/) ? "active" : "";
    var postsClass = window.location.pathname.match(/^\/posts/) ? "active" : "";
+   var aidClass = window.location.pathname.match(/^\/financial-aid/) ? "active" : "";
 
 
    const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
@@ -104,6 +105,12 @@ function Menu() {
                      <Link to="/posts" >
                         <i class="fa fa-address-card"></i>
                         <span>Post</span>
+                     </Link>
+                  </li>
+                  <li className={aidClass}>
+                     <Link to="/financial-aid" >
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        <span>Financial Aid</span>
                      </Link>
                   </li>
                </ul>

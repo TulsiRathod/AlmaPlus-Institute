@@ -107,6 +107,29 @@ const Posts = () => {
         })
     }
 
+    const formatDate = (timestamp) => {
+        const messageTime = new Date(timestamp);
+        const now = new Date();
+        const timeDiff = Math.abs(now - messageTime);
+        const minutesDiff = Math.floor(timeDiff / 60000);
+        if (minutesDiff < 1) {
+            return "Just now";
+        } else if (minutesDiff < 60) {
+            return `${minutesDiff} minute${minutesDiff === 1 ? "" : "s"} ago`;
+        } else if (messageTime.toDateString() === now.toDateString()) {
+            const options = { hour: "numeric", minute: "numeric" };
+            return `Today at ${messageTime.toLocaleTimeString("en-US", options)}`;
+        } else {
+            const options = {
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+            };
+            return messageTime.toLocaleString("en-US", options);
+        }
+    };
+
     return (
         <Fragment>
             <Loader />
@@ -146,7 +169,7 @@ const Posts = () => {
                                                         <td align='left'>{index + 1}</td>
                                                         <td>{elem.photos === '' || elem.photos === undefined || elem.photos.length <= 0 ? <img src='assets/img/Events-amico.png' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}></img> : <img src={`${ALMA_PLUS_API_URL}${elem.photos[0]}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} />}</td>
                                                         <td>{elem.description}</td>
-                                                        <td>{elem.date.split('T')[0]}</td>
+                                                        <td>{formatDate(elem.date)}</td>
                                                         <td><i className='fa fa-trash' style={{ color: "red", cursor: "pointer" }} onClick={() => { handleDeletePost(elem._id) }}></i></td>
                                                     </tr>
                                                 ) : <tr><td >No Record Found..</td></tr>}

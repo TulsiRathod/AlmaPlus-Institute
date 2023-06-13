@@ -70,7 +70,6 @@ const AddPost = () => {
             files.forEach((file, i) => {
                 body.append(`photos`, file, file.name);
             });
-
             axios({
                 method: "post",
                 url: `${ALMA_PLUS_API_URL}/api/instituteAddPost`,
@@ -103,10 +102,6 @@ const AddPost = () => {
         let errors = {};
         let isValid = true;
 
-        if (!input["fname"]) {
-            isValid = false;
-            errors["fname_err"] = "Please Enter Name";
-        }
         if (!input["description"]) {
             isValid = false;
             errors["description_err"] = "Please Enter Description";
@@ -175,7 +170,7 @@ const AddPost = () => {
 
                                                 </div>
                                             </div>
-                                            <button type="submit" className="btn btn-sm btn-success m-r-5" >{disable ? 'Processing...' : 'Submit'}</button>
+                                            <button className="btn btn-sm btn-success m-r-5">{disable ? 'Processing...' : 'Submit'}</button>
                                             <button type="reset" className="btn btn-sm btn-default" onClick={handleReset}>Reset</button>
                                         </fieldset>
                                     </form>

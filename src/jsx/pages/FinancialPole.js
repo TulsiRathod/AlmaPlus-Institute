@@ -7,14 +7,16 @@ import { ALMA_PLUS_API_URL } from './baseURL';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 
-const Users = () => {
+const FinancialPole = () => {
     const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
     const institute_Name = localStorage.getItem("AlmaPlus_institute_Name");
+
+    // let navigate = useNavigate();
     let navigate = useNavigate();
-    const [users, setUsers] = useState([]);
-    const [displayUsers, setDisplayUsers] = useState([]);
+    const [data, setData] = useState([]);
+    const [displayCourses, setDisplayCourses] = useState([]);
     const rows = [10, 20, 30];
-    const [usersPerPage, setUsersPerPage] = useState(rows[0]);
+    const [coursesPerPage, setCoursesPerPage] = useState(rows[0]);
     const [currentPage, setCurrentPage] = useState(1);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
@@ -23,33 +25,34 @@ const Users = () => {
         document.getElementById('page-loader').style.display = 'none';
         var element = document.getElementById("page-container");
         element.classList.add("show");
-        getUsersData();
+        getAidData();
+
     }, []);
 
-    const getUsersData = () => {
+    const getAidData = () => {
         axios({
             method: "get",
-            url: `${ALMA_PLUS_API_URL}/api/getUsersOfInstitute/${institute_Name}`,
+            url: `${ALMA_PLUS_API_URL}/api/getFinancialAidByInstitute/${institute_Name}`,
             // data: bodyFormData,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }).then((response) => {
-            console.log(response.data.data);
-            setUsers(response.data.data);
+            // console.log(response.data.data);
+            setData(response.data.data);
 
         });
     };
 
     useEffect(() => {
-        setDisplayUsers(users);
-    }, [users]);
+        setDisplayCourses(data);
+    }, [data]);
 
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = displayUsers.slice(indexOfFirstUser, indexOfLastUser);
+    const indexOfLastCourse = currentPage * coursesPerPage;
+    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    const currentCourses = displayCourses.slice(indexOfFirstCourse, indexOfLastCourse);
 
     const pageNumbers = [];
 
-    for (let i = 1; i <= Math.ceil(displayUsers.length / usersPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(displayCourses.length / coursesPerPage); i++) {
         pageNumbers.push(i);
     }
 
@@ -60,13 +63,13 @@ const Users = () => {
     const handleSearch = (e) => {
         if (e.target.value) {
             let search = e.target.value;
-            setDisplayUsers(users.filter(
+            setDisplayCourses(data.filter(
                 (elem) =>
-                    elem.email.toLowerCase().includes(search.toLowerCase()) ||
-                    elem.fname.toLowerCase().includes(search.toLowerCase())
+                    elem.name.toLowerCase().includes(search.toLowerCase()) ||
+                    elem.aid.toLowerCase().includes(search.toLowerCase())
             ));
         } else {
-            setDisplayUsers(users)
+            setDisplayCourses(data)
         }
     }
 
@@ -76,35 +79,35 @@ const Users = () => {
             setCurrentPage(1);
         }
     }
-    const [deleteId, setDeleteId] = useState('');
-    const [alert, setAlert] = useState(false);
-    const [alert2, setAlert2] = useState(false);
-
-    const handleDeleteUser = (id) => {
-        setDeleteId(id);
-        setAlert(true);
-    }
-
-    const DeleteUser = () => {
-        // console.log("delete button");
-        axios({
-            method: "delete",
-            url: `${ALMA_PLUS_API_URL}/api/deleteUser/${deleteId}`,
-        }).then((response) => {
-            if (response.data.success === true) {
-                getUsersData();
-                setDeleteId('');
-                setAlert(false);
-                setAlert2(true);
-            }
-        })
-    }
 
     const handleReset = () => {
         // getUsersData('none','none');
         setCurrentPage(1);
         setFrom('');
         setTo('');
+    }
+    const [deleteId, setDeleteId] = useState('');
+    const [alert, setAlert] = useState(false);
+    const [alert2, setAlert2] = useState(false);
+
+    const handleDeleteAid = (id) => {
+        setDeleteId(id);
+        setAlert(true);
+    }
+
+    const DeleteAid = () => {
+        // console.log("delete button");
+        axios({
+            method: "delete",
+            url: `${ALMA_PLUS_API_URL}/api/deleteFinancialAid/${deleteId}`,
+        }).then((response) => {
+            if (response.data.success === true) {
+                getAidData();
+                setDeleteId('');
+                setAlert(false);
+                setAlert2(true);
+            }
+        })
     }
 
     return (
@@ -115,17 +118,17 @@ const Users = () => {
                 <div id="content" className="content">
                     <ol className="breadcrumb float-xl-right">
                         <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
-                        <li className="breadcrumb-item active">Users</li>
+                        <li className="breadcrumb-item active">Financial-Aid</li>
                     </ol>
 
-                    <h1 className="page-header">Users
-                        <Link to="/add-user" className="btn btn-success mx-3" ><i className="fa fa-plus"></i></Link>
+                    <h1 className="page-header">Financial-Aid
+                        <Link to="/add-financial-aid" className="btn btn-success mx-3" ><i className="fa fa-plus"></i></Link>
                     </h1>
 
                     <div className="card">
                         <div className="card-body">
                             <div class="form-outline mb-4">
-                                <input type="search" class="form-control" id="datatable-search-input" placeholder='Search User' onChange={handleSearch} />
+                                <input type="search" class="form-control" id="datatable-search-input" placeholder='Search Course' onChange={handleSearch} />
                             </div>
                             <div className="row">
                                 <div className="col-12">
@@ -134,24 +137,26 @@ const Users = () => {
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
-                                                    <th>Full Name</th>
-                                                    <th>Profile Pic</th>
-                                                    <th>Email</th>
-                                                    <th>Phone Number</th>
-                                                    <th>Birth Date</th>
+                                                    <th>Student Name</th>
+                                                    <th>image</th>
+                                                    <th>Aid</th>
+                                                    <th>Claimed</th>
+                                                    <th>Due Date</th>
+                                                    <th>Description</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {currentUsers.length > 0 ? currentUsers.map((elem, index) =>
+                                                {currentCourses.length > 0 ? currentCourses.map((elem, index) =>
                                                     <tr key={index}>
                                                         <td align='left'>{index + 1}</td>
-                                                        <td>{elem.fname}</td>
-                                                        <td>{elem.profilepic === '' || elem.profilepic === undefined ? <img src='assets/img/profile1.png' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}></img> : <img src={`${ALMA_PLUS_API_URL}${elem.profilepic}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} />}</td>
-                                                        <td>{elem.email}</td>
-                                                        <td>{elem.phone ? elem.phone : ''}</td>
-                                                        <td>{elem.dob.split('T')[0]}</td>
-                                                        <td><i className='fa fa-trash' style={{ color: "red", cursor: "pointer", marginLeft: "5px" }} onClick={() => { handleDeleteUser(elem._id) }}></i></td>
+                                                        <td>{elem.name}</td>
+                                                        <td>{elem.image === '' || elem.image === undefined ? <img src='assets/img/profile1.png' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}></img> : <img src={`${ALMA_PLUS_API_URL}${elem.image}`} alt='user-img' style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }} />}</td>
+                                                        <td>{elem.aid}</td>
+                                                        <td>{elem.claimed}</td>
+                                                        <td>{elem.dueDate.split('T')[0]}</td>
+                                                        <td>{elem.description}</td>
+                                                        <td><i className='fa fa-edit' style={{ color: "green", cursor: "pointer" }} onClick={() => { navigate('/edit-financial-aid', { state: { data: elem } }) }}></i><i className='fa fa-trash' style={{ color: "red", cursor: "pointer", marginLeft: "5px" }} onClick={() => { handleDeleteAid(elem._id) }}></i></td>
                                                     </tr>
                                                 ) : <tr><td >No Record Found..</td></tr>}
                                             </tbody>
@@ -167,7 +172,7 @@ const Users = () => {
                                         </ul>
                                         <div className='filter-pages' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <label htmlFor='selection' style={{ marginBottom: '0' }}>Users Per Page :</label>
-                                            <select className='selection' style={{ outline: '0', borderWidth: '0 0 1px', borderColor: 'black', marginLeft: '10px' }} onChange={(e) => setUsersPerPage(e.target.value)}>
+                                            <select className='selection' style={{ outline: '0', borderWidth: '0 0 1px', borderColor: 'black', marginLeft: '10px' }} onChange={(e) => setCoursesPerPage(e.target.value)}>
                                                 {rows.map(value =>
                                                     <option value={value}>{value}</option>
                                                 )}
@@ -185,7 +190,7 @@ const Users = () => {
                     confirmBtnText="Yes, delete it!"
                     confirmBtnBsStyle="danger"
                     title="Are you sure?"
-                    onConfirm={DeleteUser}
+                    onConfirm={DeleteAid}
                     onCancel={() => { setAlert(false); setDeleteId(''); }}
                 >
                     You will not be able to recover this user!
@@ -194,7 +199,7 @@ const Users = () => {
                 {alert2 === true ? <SweetAlert
                     success
                     title="User Deleted Successfully!"
-                    onConfirm={() => { setAlert2(false); getUsersData(); }}
+                    onConfirm={() => { setAlert2(false); getAidData(); }}
                 />
                     : ''}
                 <Footer />
@@ -203,4 +208,4 @@ const Users = () => {
     )
 }
 
-export default Users
+export default FinancialPole

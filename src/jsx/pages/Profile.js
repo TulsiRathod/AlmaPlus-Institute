@@ -48,10 +48,9 @@ const Profile = () => {
     const handleImg = (e) => {
         var body = new FormData();
         body.append('image', e.target.files[0]);
-        const myurl = `${ALMA_PLUS_API_URL}/api/uploadInstituteImage`;
         axios({
             method: "post",
-            url: myurl,
+            url: `${ALMA_PLUS_API_URL}/api/uploadInstituteImage`,
             data: body,
             headers: { 'Content-Type': "multipart/form-data" },
         }).then((response) => {
