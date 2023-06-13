@@ -79,7 +79,7 @@ function ForgotPassword() {
                 <div className="login login-v2" data-pageload-addclassName="animated fadeIn">
                     <div className="login-header">
                         <div className="brand">
-                            <span className="logo"></span> <b>Plus One</b> Admin
+                            <span className="logo"></span> <b>AlmaPlus Institues</b>
                             <small>Forgot Password for Plus One admin panel</small>
                         </div>
                         <div className="icon">
