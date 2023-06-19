@@ -12,6 +12,7 @@ const AddPost = () => {
 
     const institute_Id = localStorage.getItem("AlmaPlus_institute_Id");
     const [iname, setiname] = useState('');
+    const [image,setImage]=useState("");
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -55,8 +56,18 @@ const AddPost = () => {
         });
     };
 
+    const getInstitute = () =>{
+        axios({
+            url:`${ALMA_PLUS_API_URL}/api/getInstituteById/${institute_Id}`,
+            method:"get",
+        }).then((Response)=>{
+            setImage(Response.data.data.image&&Response.data.data.image);
+        })
+    }
+
     useEffect(() => {
         getData();
+        getInstitute();
     }, [institute_Id]);
 
     const submitHandler = (e) => {
@@ -70,6 +81,8 @@ const AddPost = () => {
             files.forEach((file, i) => {
                 body.append(`photos`, file, file.name);
             });
+            body.append("profilepic", image);
+            body.append("date", new Date());
             axios({
                 method: "post",
                 url: `${ALMA_PLUS_API_URL}/api/instituteAddPost`,
